@@ -45,6 +45,7 @@ public class Ejecutar {
         isPalindrome(cadena);
 
 
+        //menu();
 
 
 
@@ -95,9 +96,9 @@ public class Ejecutar {
         System.out.println("Print STACK \n\t> stack print\n");
         System.out.println("Print QUEUE \n\t> queue print\n");
 
-        System.out.println("Delete from STACK AND QUEUE\n\t> delete a b c d e ...\n");
-        System.out.println("Delete from STACK \n\t> stack pop a b c d e ...\n");
-        System.out.println("Delete from QUEUE \n\t> queue delete a b c d e ...\n\n");
+        System.out.println("Delete 1 item from STACK AND QUEUE\n\t> delete\n");
+        System.out.println("Delete 1 item from STACK \n\t> stack pop\n");
+        System.out.println("Delete 1 item from QUEUE \n\t> queue delete\n\n");
 
         System.out.print("> ");
 

@@ -20,10 +20,10 @@ public class MyQueue {
 
     public void insert(char data){
 
-        if(tail == 100){
+        if(tail == MAX){
             System.out.println("Queue is full!");
+            return;
         }
-
         queue[tail] = data;
         tail++;
 
@@ -52,9 +52,10 @@ public class MyQueue {
 
     }
 
-//   public char deleteRecursive(){
-//
-//   }
+   public char deleteRecursive(){
+        return 'x';
+
+   }
 
     public String toString(){
         String out = "Queue:\n";
