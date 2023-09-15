@@ -37,6 +37,11 @@ public class MyQueue {
 
         char c = queue[head];
 
+        if(tail == 0){
+            System.out.println("QUEUE is empty.");
+            return '#';
+        }
+
         for(int i = 0; i < tail -1; i++){
             queue[i] = queue[i+1];
         }
@@ -46,6 +51,10 @@ public class MyQueue {
         return c;
 
     }
+
+//   public char deleteRecursive(){
+//
+//   }
 
     public String toString(){
         String out = "Queue:\n";
