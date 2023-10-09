@@ -88,6 +88,10 @@ public abstract class Pokemon {
             //System.out.printf("randomPowers[%d] = %s\n", i, randomPowers[i]);
             powers[i] = randomPowers[i];
         }
+        for(int i = 0; i < 8; i++){
+            System.out.printf("[%d] = %s\n", i, randomPowers[i]);
+        }
+
     }
 
     public void setPowers(String[] powers) {
@@ -106,7 +110,7 @@ public abstract class Pokemon {
     public String getPowersList(){
         String output = "";
         for (int i = 0; i < powersList.length; i++) {
-            //System.out.printf("powers[%d] = %s\n", i, powers[i]);
+            //System.out.printf("powers[%d] = %s\n", i, powersList[i]);
             output = output + powersList[i] + ",";
         }
         return output;

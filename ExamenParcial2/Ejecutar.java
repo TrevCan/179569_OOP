@@ -4,6 +4,7 @@ import main.pokemones.Fire;
 import main.pokemones.Grass;
 import main.pokemones.Pokemon;
 import main.pokemones.Water;
+import main.utilities.Utils;
 
 import java.util.Random;
 
@@ -39,6 +40,7 @@ public class Ejecutar {
         //    System.out.println("nn " + waterPokemons[i]);
         //}
 
+        pokemons = Utils.shufflePokemons(pokemons.clone());
         Menu menu = new Menu();
         menu.runMenu(pokemons);
 
