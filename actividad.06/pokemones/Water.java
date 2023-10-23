@@ -31,4 +31,10 @@ public class Water extends Pokemon{
         }
         setRandomName();
     }
+
+    public static void resetNamesList(){
+        stackWater = null;
+    }
+
+
 }

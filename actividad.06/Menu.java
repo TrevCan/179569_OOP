@@ -1,8 +1,16 @@
 package main;
 
+import main.pokemones.Fire;
+import main.pokemones.Grass;
 import main.pokemones.Pokemon;
+import main.pokemones.Water;
+import main.utilities.Utils;
 
+import java.io.IOException;
 import java.util.Scanner;
+
+import static main.Ejecutar.makeNewPokemon;
+import static main.Ejecutar.printPlayers;
 
 public class Menu {
     Scanner scanner;
@@ -12,7 +20,7 @@ public class Menu {
 
     }
 
-    public void runMenu(Pokemon[] pokemons) {
+    public void runMenu(Pokemon[] pokemons) throws IOException, ClassNotFoundException {
         // randomly generate 15 Pokemons, 5 Grass, 5 Water, 5 Fire. -> get from class Ejecutar as parameter
         // choose only one of those pokemoms
         // say hello
@@ -25,120 +33,175 @@ public class Menu {
         // pokemon type (water, grass, fire)
         // attacks
 
-        // randomly selects one of the instances from the pokemons[] array 0 to 14.
-        Pokemon chosenPokemon = pokemons[Ejecutar.getRandom().nextInt(15)];
+        Player[] players;
+        players = Ejecutar.readProfilesFromDataStorage();
+        String chosenPlayerString = "";
+        while (true) {
 
-        System.out.println("Hola! Bienvenido a Adivina Quien Pokemon.");
-        System.out.println();
-        System.out.println("Instrucciones:");
-        System.out.println("La computadora ha seleccionado un Pokemon de manera aleatoria.");
-        System.out.println("Tu tendras que adivinar el nombre de ese pokemon.");
-        System.out.println("\tPodras hacer preguntas referentes a su tipo (Water, Fire, Grass)");
-        System.out.println("\to preguntas referentes a sus poderes");
-        System.out.println("\t\t (" + pokemons[0].getPowersList() + ")");
-        System.out.println("Tendras un limite de 4 preguntas");
-        System.out.println("Presione [ENTER] para continuar...");
-        scanner.nextLine();
-        System.out.println("Para preguntar acerca del tipo, utiliza el comando '> pregunta tipo tipoDePokemon'");
-        System.out.println("\t> pregunta tipo Water");
-        System.out.println("\t> pregunta tipo Fire");
-        System.out.println("\t> pregunta tipo Grass");
-        System.out.println("Para preguntar acerca de sus poderes, utiliza el comando '> pregunta poder poderDePokemon'");
-        System.out.println("\t> pregunta poder Hydro pump");
-        System.out.println("\t> pregunta poder Petal Dance");
-        System.out.println("\tetc");
-        System.out.println("Cuando estes seguro de quien es tu Pokemon, deberas escribir el comando '> respuesta nombreDePokemon'");
-        System.out.println("NOTA: Solo tendras una oportunidad para dar tu respuesta");
-        //System.out.println("POKEMON is: " + chosenPokemon.getType());
+            // randomly selects one of the instances from the pokemons[] array 0 to 14.
+            Pokemon chosenPokemon = pokemons[Ejecutar.getRandom().nextInt(15)];
 
-        System.out.println();
-        System.out.println("EL JUEGO COMIENZA.....\t AHORA!");
-        int questionCount = 0;
-        System.out.print("Nombres de pokemones: ");
-        for(Pokemon p: pokemons){
-            System.out.printf("%s, ", p.getName());
-        }
-        System.out.println();
-        System.out.println("Lista de Poderes/Ataques: " + chosenPokemon.getPowersList());
+            System.out.println("Hola! Bienvenido a Adivina Quien Pokemon.");
+            System.out.println();
+            System.out.println("Instrucciones:");
+            System.out.println("La computadora ha seleccionado un Pokemon de manera aleatoria.");
+            System.out.println("Tu tendras que adivinar el nombre de ese pokemon.");
+            System.out.println("\tPodras hacer preguntas referentes a su tipo (Water, Fire, Grass)");
+            System.out.println("\to preguntas referentes a sus poderes");
+            System.out.println("\t\t (" + pokemons[0].getPowersList() + ")");
+            System.out.println("Tendras un limite de 4 preguntas");
+            System.out.println("Presione [ENTER] para continuar...");
+            scanner.nextLine();
+            System.out.println("Para preguntar acerca del tipo, utiliza el comando '> pregunta tipo tipoDePokemon'");
+            System.out.println("\t> pregunta tipo Water");
+            System.out.println("\t> pregunta tipo Fire");
+            System.out.println("\t> pregunta tipo Grass");
+            System.out.println("Para preguntar acerca de sus poderes, utiliza el comando '> pregunta poder poderDePokemon'");
+            System.out.println("\t> pregunta poder Hydro pump");
+            System.out.println("\t> pregunta poder Petal Dance");
+            System.out.println("\tetc");
+            System.out.println("Cuando estes seguro de quien es tu Pokemon, deberas escribir el comando '> respuesta nombreDePokemon'");
+            System.out.println("NOTA: Solo tendras una oportunidad para dar tu respuesta");
+            //System.out.println("POKEMON is: " + chosenPokemon.getType());
 
-
-        System.out.printf("> ");
-        String userResponse = scanner.nextLine();
-
-        while (!userResponse.startsWith("respuesta ")) {
-            //System.out.println("usr response is: " + userResponse);
-            if(questionCount >= 4){
-                System.out.println("LIMITE DE PREGUNTAS ALCANZADO. Utilice '> respuesta nombreDePokemon' para dar su respuesta.");
-                System.out.print("> ");
-                userResponse = scanner.nextLine();
-                continue;
-            }
-            if (userResponse.startsWith("pregunta tipo ")) {
-                userResponse = userResponse.substring(14);
-                if(! "FireGrassWater".contains(userResponse)) {
-                    System.out.println("Tipo de Pokemon no reconocido. Intente nuevamente");
-                    System.out.print("> ");
-                    userResponse = scanner.nextLine();
-                    continue;
-                }
-                questionCount++;
-                //System.out.println("user type is... " + userResponse);
-                if (userResponse.equals(chosenPokemon.getType())) {
-                    System.out.printf("SI, el pokemon es de tipo %s.\n", userResponse);
-                    removeAllPokemonsWithoutType(pokemons, userResponse);
-                } else {
-                    System.out.printf("NO, el pokemon no es de tipo %s.\n", userResponse);
-                    removeAllPokemonsWithType(pokemons, userResponse);
-                }
-
-            } else if (userResponse.startsWith("pregunta poder ")) {
-                userResponse = userResponse.substring(15);
-                if(! chosenPokemon.getPowersList().contains(userResponse+',')){
-                    System.out.println("Poder no reconocido. Intente nuevamente");
-                    System.out.print("> ");
-                    userResponse = scanner.nextLine();
-                    continue;
-                }
-                questionCount++;
-                //System.out.println("user poder is... " + userResponse);
-                if(chosenPokemon.getPowers().contains(userResponse)){
-                    System.out.printf("SI, el pokemon contiene el poder: %s.\n", userResponse);
-                    removeAllPokemonsWithoutPower(pokemons, userResponse);
-                } else {
-                    System.out.printf("NO, el pokemon no contiene el poder: %s.\n", userResponse);
-                    removeAllPokemonsWithPower(pokemons, userResponse);
-                }
-
-            } else if (Main.DEBUG && userResponse.startsWith("print all")) {
-                for (Pokemon p :
-                        pokemons) {
-                    if(p != null)
-                        System.out.printf("%s\n\t%s\t\t%s\n", p.getName(), p.getType(), p.getPowers());
-                }
-            } else if(Main.DEBUG && userResponse.startsWith("print chosen")){
-                System.out.printf("%s\n\t%s\t\t%s\n", chosenPokemon.getName(), chosenPokemon.getType(), chosenPokemon.getPowers());
+            Player chosenPlayer = null;
+            if(!chosenPlayerString.isEmpty()){
+                System.out.printf("Presione [ENTER] si desea seguir jugando como \"%s\"\n", chosenPlayerString);
+                System.out.println("Si no, escriba un perfil a seleccionar o cree uno nuevo escribiendolo");
+                String in = scanner.nextLine();
+                chosenPlayer = Ejecutar.selectOrAddPlayer(players, chosenPlayerString);
             } else {
-                System.out.println("Comando no reconocido. Intente nuevamente.");
+                System.out.println("Para continuar, escriba un perfil a seleccionar o cree uno nuevo escribiendolo");
+                Ejecutar.printPlayers(players);
+                chosenPlayerString = scanner.nextLine();
+                while (chosenPlayerString.isBlank()) {
+                    System.out.printf("El nombre no puede estar vacio, intente nuevamente");
+                    chosenPlayerString = scanner.nextLine();
+                }
+                chosenPlayer = Ejecutar.selectOrAddPlayer(players, chosenPlayerString);
             }
-            for(Pokemon p: pokemons){
-                if(p != null)
-                    System.out.printf("%s, ", p.getName());
+
+            //Ejecutar.printPlayers(players);
+            System.out.printf("Jugador Elegido: \"%s\"\n", chosenPlayer);
+
+
+            System.out.println();
+            System.out.println(chosenPlayer.getName() + ", EL JUEGO COMIENZA.....\t AHORA!");
+            int questionCount = 0;
+            System.out.print("Nombres de pokemones: ");
+            for (Pokemon p : pokemons) {
+                System.out.printf("%s, ", p.getName());
             }
             System.out.println();
             System.out.println("Lista de Poderes/Ataques: " + chosenPokemon.getPowersList());
+
+
+            System.out.printf("> ");
+            String userResponse = scanner.nextLine();
+
+            while (!userResponse.startsWith("respuesta ")) {
+                //System.out.println("usr response is: " + userResponse);
+                if (questionCount >= 4) {
+                    System.out.println("LIMITE DE PREGUNTAS ALCANZADO. Utilice '> respuesta nombreDePokemon' para dar su respuesta.");
+                    System.out.print("> ");
+                    userResponse = scanner.nextLine();
+                    continue;
+                }
+                if (userResponse.startsWith("pregunta tipo ")) {
+                    userResponse = userResponse.substring(14);
+                    if (!"FireGrassWater".contains(userResponse)) {
+                        System.out.println("Tipo de Pokemon no reconocido. Intente nuevamente");
+                        System.out.print("> ");
+                        userResponse = scanner.nextLine();
+                        continue;
+                    }
+                    questionCount++;
+                    //System.out.println("user type is... " + userResponse);
+                    if (userResponse.equals(chosenPokemon.getType())) {
+                        System.out.printf("SI, el pokemon es de tipo %s.\n", userResponse);
+                        removeAllPokemonsWithoutType(pokemons, userResponse);
+                    } else {
+                        System.out.printf("NO, el pokemon no es de tipo %s.\n", userResponse);
+                        removeAllPokemonsWithType(pokemons, userResponse);
+                    }
+
+                } else if (userResponse.startsWith("pregunta poder ")) {
+                    userResponse = userResponse.substring(15);
+                    if (!chosenPokemon.getPowersList().contains(userResponse + ',')) {
+                        System.out.println("Poder no reconocido. Intente nuevamente");
+                        System.out.print("> ");
+                        userResponse = scanner.nextLine();
+                        continue;
+                    }
+                    questionCount++;
+                    //System.out.println("user poder is... " + userResponse);
+                    if (chosenPokemon.getPowers().contains(userResponse)) {
+                        System.out.printf("SI, el pokemon contiene el poder: %s.\n", userResponse);
+                        removeAllPokemonsWithoutPower(pokemons, userResponse);
+                    } else {
+                        System.out.printf("NO, el pokemon no contiene el poder: %s.\n", userResponse);
+                        removeAllPokemonsWithPower(pokemons, userResponse);
+                    }
+
+                } else if (Main.DEBUG && userResponse.startsWith("print all")) {
+                    for (Pokemon p :
+                            pokemons) {
+                        if (p != null)
+                            System.out.printf("%s\n\t%s\t\t%s\n", p.getName(), p.getType(), p.getPowers());
+                    }
+                } else if (Main.DEBUG && userResponse.startsWith("print chosen")) {
+                    System.out.printf("%s\n\t%s\t\t%s\n", chosenPokemon.getName(), chosenPokemon.getType(), chosenPokemon.getPowers());
+                } else {
+                    System.out.println("Comando no reconocido. Intente nuevamente.");
+                }
+                for (Pokemon p : pokemons) {
+                    if (p != null)
+                        System.out.printf("%s, ", p.getName());
+                }
+                System.out.println();
+                System.out.println("Lista de Poderes/Ataques: " + chosenPokemon.getPowersList());
+                System.out.println();
+                System.out.print("> ");
+                userResponse = scanner.nextLine();
+            }
+            userResponse = userResponse.substring(10);
+            System.out.println(userResponse);
+            if (userResponse.equals(chosenPokemon.getName())) {
+                System.out.println("SI, GANASTE!! Gracias por jugar.");
+                chosenPlayer.addGame(true);
+            } else {
+                System.out.println("INCORRECTO. El Pokemon elegido es: " + chosenPokemon.getName());
+                System.out.println("Gracias por jugar.");
+                chosenPlayer.addGame(false);
+            }
+
             System.out.println();
-            System.out.print("> ");
-            userResponse = scanner.nextLine();
-        }
-        userResponse = userResponse.substring(10);
-        System.out.println(userResponse);
-        if(userResponse.equals(chosenPokemon.getName())){
-            System.out.println("SI, GANASTE!! Gracias por jugar.");
-        } else{
-            System.out.println("INCORRECTO. El Pokemon elegido es: " + chosenPokemon.getName());
-            System.out.println("Gracias por jugar.");
+            System.out.println(chosenPlayer);
+            System.out.println();
+            System.out.println("\tSTATS de todos los jugadores:");
+            printPlayers(players);
+            System.out.println();
+
+            System.out.println("Para jugar de nuevo presione [ENTER].");
+            System.out.println("De lo contrario, escriba 0");
+            String newInput = scanner.nextLine();
+            if (newInput.equals("0")) {
+                System.out.println("Gracias por jugar Adivina Quien POKEMON!");
+                break;
+            }
+
+            Fire.resetNamesList();
+            Grass.resetNamesList();
+            Water.resetNamesList();
+
+            for (int i = 0; i < pokemons.length; i++) {
+                pokemons[i] = makeNewPokemon(i);
+            }
+            pokemons = Utils.shufflePokemons(pokemons.clone());
+
         }
 
+        Ejecutar.writeObjectArrayToDataStorage(players);
     }
 
     private void removeAllPokemonsWithType(Pokemon[] pokemons, String type) {

@@ -24,4 +24,8 @@ public class Grass extends Pokemon{
         setRandomName();
 
     }
+
+    public static void resetNamesList() {
+        stackGrass = null;
+    }
 }

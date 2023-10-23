@@ -25,4 +25,13 @@ public class Fire extends Pokemon{
         setRandomName();
 
     }
+
+    public static void resetNamesList() {
+        stackFire = null;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

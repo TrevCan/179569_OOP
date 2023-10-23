@@ -30,6 +30,7 @@ public abstract class Pokemon {
 
     }
 
+
     public void setRandomName(){
         String possibleName = randomNameStack.pop();
         if ( possibleName.equals("#") ){
@@ -88,9 +89,9 @@ public abstract class Pokemon {
             //System.out.printf("randomPowers[%d] = %s\n", i, randomPowers[i]);
             powers[i] = randomPowers[i];
         }
-        for(int i = 0; i < 8; i++){
-            System.out.printf("[%d] = %s\n", i, randomPowers[i]);
-        }
+        //for(int i = 0; i < 8; i++){
+        //    System.out.printf("[%d] = %s\n", i, randomPowers[i]);
+        //}
 
     }
 

@@ -29,7 +29,7 @@ public class Ejecutar {
 
     }
 
-    public void iniciarPrograma() throws IOException {
+    public void iniciarPrograma() throws IOException, ClassNotFoundException {
 
         File dir = new File("data");
         if (!dir.exists()) {
@@ -37,6 +37,22 @@ public class Ejecutar {
         }
         profiles = new File("data/profiles");
         profiles.createNewFile();
+
+//        Player[] players = {new Player("Emilio"), new Player("hola"), new Player("k hace")};
+//
+//        writeObjectArrayToDataStorage(players);
+//
+//
+//        Player[] playersRead = readProfilesFromDataStorage();
+//        for (Player p :
+//                playersRead) {
+//            if (p != null)
+//                System.out.println(p);
+//        }
+//
+
+        if (Main.DEBUG_PLAYERS)
+            return;
 
 //        File ofile = new File("player");
 //        FileOutputStream ofstream = new FileOutputStream(ofile);
@@ -86,7 +102,7 @@ public class Ejecutar {
      * @param index
      * @return new pokemon instance
      */
-    private Pokemon makeNewPokemon(int index) {
+    public static Pokemon makeNewPokemon(int index) {
         if (index < 5)
             return new Water();
         if (index < 10)
@@ -99,14 +115,28 @@ public class Ejecutar {
     public static Player[] readProfilesFromDataStorage() throws IOException, ClassNotFoundException {
         Player[] players = new Player[10];
         FileInputStream fileInputStream = new FileInputStream(profiles);
-        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        ObjectInputStream objectInputStream = null;
+        try {
+            objectInputStream = new ObjectInputStream(fileInputStream);
+        } catch(EOFException e){
+            // this means the file is empty and did not read any objects
+            // do nothing
+            fileInputStream.close();
+            return players;
+            // return player WITHOUT closing objectInputStream object
+        }
 
-        Player p = (Player) objectInputStream.readObject();
+        Player p = null;
         int i = 0;
-        while(p != null){
+
+        while (fileInputStream.available() > 0 && (p = (Player) objectInputStream.readObject()) != null && i != 10) {
+
             players[i] = p;
             i++;
         }
+
+        objectInputStream.close();
+        fileInputStream.close();
 
         return players;
 
@@ -116,12 +146,48 @@ public class Ejecutar {
         FileOutputStream fileOutputStream = new FileOutputStream(profiles);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         for (int i = 0; i < players.length; i++) {
+            if(players[i] == null) {
+                break;
+            }
+            System.out.printf("Writing %s to data storage.\n", players[i]);
             objectOutputStream.writeObject(players[i]);
         }
         objectOutputStream.flush();
         objectOutputStream.close();
         fileOutputStream.close();
 
+    }
+
+    public static Player selectOrAddPlayer(Player[] players, String playerName){
+        for (int i = 0; i < players.length; i++) {
+            if(players[i] == null){
+                System.out.printf("Creando nuevo jugador \"%s\"\n", playerName);
+                return players[i] = new Player(playerName);
+            }
+            if(players[i].getName().equals(playerName)){
+                return players[i];
+            }
+
+        }
+        return null;
+    }
+
+    public Player[] addPlayerToArray(Player[] players, Player player) {
+        for (int i = 0; i < players.length; i++) {
+            if (players[i] == null) {
+                players[i] = player;
+                break;
+            }
+        }
+        return players;
+    }
+
+    public static void printPlayers(Player[] players){
+        for(int i = 0; i < players.length; i++){
+            if(players[i] != null) {
+                System.out.printf("Jugador %d: %s\n", i+1, players[i]);
+            }
+        }
     }
 
     public static Random getRandom() {
